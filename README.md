@@ -1,10 +1,8 @@
 **resume-jd-promptX (PromptX)**
 
-A Streamlit app that scores a resume against a job description using the final prompt (V5). Paste both texts and get a match score, the skills the job asks for, the skills your resume shows, what's missing, and three rewritten resume bullets.
+A Streamlit app that scores a resume against a job description using the final prompt (V5). Drop your Job Description, Resume and get a match score, the skills the job asks for, the skills your resume shows, what's missing, and three rewritten resume bullets.
 
 **What you get**
-
-- Top 8 skills extracted from the job description
 - Skills evidenced in the resume
 - A 0-100 match score with the math shown (must-have skills 40, experience 40, good-to-have 20)
 - A list of missing skills
@@ -30,7 +28,7 @@ A Streamlit app that scores a resume against a job description using the final p
 
    On Windows, use `copy .env.example .env` instead.
 
-4. Open `.env` and paste your `ANTHROPIC_API_KEY`.
+4. Open `.env` and paste your key`.
 
 5. Start the app:
 
