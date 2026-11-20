@@ -199,37 +199,3 @@ header[data-testid="stHeader"], footer, #MainMenu, [data-testid="stToolbar"] { d
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
-@media screen and (max-width: 600px) {
-
-  [data-testid="stHorizontalBlock"] {
-    flex-wrap: wrap !important;
-    gap: 1rem !important;
-  }
-
-  [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
-    flex: 1 1 100% !important;
-    width: 100% !important;
-    min-width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .card {
-    width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    padding: 1.4rem !important;
-    border-radius: 28px !important;
-  }
-
-  .card h3,
-  .card p,
-  .card li {
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-  }
-
-  [data-testid="stMainBlockContainer"] {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-}

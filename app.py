@@ -79,7 +79,14 @@ html body [role="listbox"], html body [role="listbox"] *, html body [role="optio
 }
 html body [role="option"]:hover, html body [role="option"][aria-selected="true"] { background-color: #eaf7ff !important; }
 html body .stApp .stage h1 { font-size: clamp(1.3rem, 4.1cqw, 4.4rem) !important; }
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; align-items: stretch; }
+@media (max-width: 760px) {
+  .steps-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .logo { position: absolute; }
+  .logo img { height: 36px; }
+}
 """
+
 
 KEY_SHAPES = re.compile(r"AIza[0-9A-Za-z_\-]{20,}|sk-ant-[0-9A-Za-z_\-]{10,}|sk-[0-9A-Za-z_\-]{20,}")
 
@@ -566,8 +573,7 @@ cards = "".join(
     for num, title, text in steps
 )
 st.markdown(
-    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;align-items:stretch">'
-    + cards + "</div>",
+    '<div class="steps-grid">' + cards + "</div>",
     unsafe_allow_html=True,
 )
 st.markdown("<div style='height:3.5rem'></div>", unsafe_allow_html=True)
