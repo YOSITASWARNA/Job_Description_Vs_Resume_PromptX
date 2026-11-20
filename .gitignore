@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+*.env
+.streamlit/secrets.toml
+credentials.json
+secrets.json
+*.pem
+*.key
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+.vscode/
