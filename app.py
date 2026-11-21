@@ -272,9 +272,12 @@ def get_key(provider: str, typed: str) -> str:
     return key.strip('"').strip("'")
 
 
-def call_llm(provider: str, prompt: str, key: str) -> str:
+MODEL_NAME_RE = re.compile(r"[A-Za-z0-9._:/\-]{2,80}")
+
+
+def call_llm(provider: str, prompt: str, key: str, model_override: str = "") -> str:
     cfg = PROVIDERS[provider]
-    model = os.getenv(cfg["model_env"], cfg["model"])
+    model = model_override.strip() or os.getenv(cfg["model_env"], cfg["model"])
 
     if provider.startswith("Anthropic"):
         from anthropic import Anthropic
@@ -352,8 +355,8 @@ def parse_json(raw: str) -> dict:
         return {"error": "The model returned invalid JSON. Try again."}
 
 
-def analyze(resume: str, jd: str, provider: str, key: str) -> dict:
-    return parse_json(call_llm(provider, build_prompt(resume, jd), key))
+def analyze(resume: str, jd: str, provider: str, key: str, model: str = "") -> dict:
+    return parse_json(call_llm(provider, build_prompt(resume, jd), key, model))
 
 
 QUOTA_MARKERS = (
@@ -599,6 +602,11 @@ with right:
 pc1, pc2 = st.columns(2, gap="large")
 with pc1:
     provider = st.selectbox("AI provider", list(PROVIDERS.keys()), index=0)
+    typed_model = st.text_input(
+        "Model (optional, works with your own API key)",
+        key="typed_model",
+        placeholder=f"Leave blank for the default ({PROVIDERS[provider]['model']})",
+    )
 cfg = PROVIDERS[provider]
 has_saved = bool(get_key(provider, ""))
 with pc2:
@@ -627,6 +635,9 @@ if run:
     try:
         typed_clean = bool(run_key)
         key = get_key(provider, run_key)
+        # A custom model is only honoured when the user brings their own key,
+        # so the saved (owner's) key always runs the owner's default model.
+        user_model = typed_model.strip() if typed_clean else ""
 
         errors = []
         jd_error = validate_jd(jd_text)
@@ -664,13 +675,15 @@ if run:
             }
         elif typed_clean and not key_format_ok(run_key):
             result = {"error": "That doesn't look like an API key. Check it and try again."}
+        elif user_model and not MODEL_NAME_RE.fullmatch(user_model):
+            result = {"error": "That doesn't look like a valid model name. Check it or leave the box blank."}
         else:
             with st.spinner("Matching JD keywords against your resume…"):
                 key_problem = test_key(provider, key) if typed_clean else None
                 if key_problem:
                     result = {"error": key_problem}
                 else:
-                    result = analyze(resume_text, jd_text, provider, key)
+                    result = analyze(resume_text, jd_text, provider, key, user_model)
     except Exception as e:
         if is_quota_error(e):
             result = {"error": quota_message(cfg["short"])}
